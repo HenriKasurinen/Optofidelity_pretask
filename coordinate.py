@@ -11,8 +11,8 @@ from __future__ import division
 class Coordinate(object):
     
     """ Initialization """
-    def __init__(self, x, y, z):
+    def __init__(self, x, y):
         self.x = x
         self.y = y
-        self.z = z
+
         

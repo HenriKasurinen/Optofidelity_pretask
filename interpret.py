@@ -18,8 +18,9 @@ class Interpreter(object):
 
     def __init__(self):
         """ Initialization"""
-        self._home = Coordinate(0.0, 0.0, 0.0)
-        self._position = Coordinate(0.0, 0.0, 0.0)
+        self._home = Coordinate(0.0, 0.0)
+        self._position = Coordinate(0.0, 0.0)
+        self._z = 10.0
 
 
         """ Performs interpretation."""    
@@ -40,36 +41,34 @@ class Interpreter(object):
                     print("Linear interpolation")
                     
                 new_coordinates = line_object.coordinates()
+                new_z = line_object.spindle_height()
                 
-                if new_coordinates.z == None and new_coordinates.y == None:
+                if new_coordinates.y == None and new_z == None:
                     x = float(new_coordinates.x)
                     y = self._position.y
-                    z = self._position.z
                     client.move_x(x)
-                    self._position = Coordinate(x, y, z)
-                elif new_coordinates.x == None and new_coordinates.z == None:
+                    self._position = Coordinate(x, y)
+                elif new_coordinates.x == None and new_z == None:
                     y = float(new_coordinates.y)
-                    z = self._position.z
                     x = self._position.x
                     client.move_y(y)
-                    self._position = Coordinate(x, y, z)
+                    self._position = Coordinate(x, y)
                 elif new_coordinates.y == None and new_coordinates.x == None:
-                    z = float(new_coordinates.z)
-                    x = self._position.x
-                    y = self._position.y
+                    z = float(new_z)
+                    self._z = z
                     client.move_z(z)
-                    self._position = Coordinate(x, y, z)
-                elif new_coordinates.z == None:
+                elif new_z == None:
                     x = float(new_coordinates.x)
                     y = float(new_coordinates.y)
-                    z = self._position.z
+                    z = self._z
                     client.move(x, y, z)   
-                    self._position = Coordinate(x, y, z)                     
+                    self._position = Coordinate(x, y)                     
                 else:
                     x = float(new_coordinates.x)
                     y = float(new_coordinates.y)
-                    z = float(new_coordinates.z)
-                    self._position = Coordinate(x, y, z) 
+                    z = float(new_z)
+                    self._position = Coordinate(x, y) 
+                    self._z = z
                     client.move(x, y, z)                   
                 
             if command == 'G17':
@@ -94,7 +93,7 @@ class Interpreter(object):
                 tool_name = command[1:]
                 client.change_tool(tool_name)
             
-            if command == 'M6':
+            if command == 'M06':
                 print("Automatic tool change (ATC)")
             
             if command[0] == 'S':
@@ -118,15 +117,23 @@ class Interpreter(object):
             if command == 'G28':
                 x = self._home.x
                 y = self._home.y
-                z = self._home.z
+                z = self._z
                 print("Returning home")
                 client.move(x, y, z)
-                
+                if line_object.has_coordinates(
+                        ) and line_object.spindle_height() != None:
+                    z = float(line_object.spindle_height())
+                    self._z = z
+                    client.move_z(z)
+                                   
             if command == 'M09':
                 client.coolant_off()
               
             if command[0] == 'O':
                 print("Program name: ", command[1:])
+                
+            if command == 'M5':
+                print("Spindle stop")
                 
             if command == 'M30':
                 print("Program ended")     

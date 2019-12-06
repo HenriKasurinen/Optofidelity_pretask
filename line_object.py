@@ -33,8 +33,12 @@ class Line_object(object):
     def coordinates(self, default = None):
         x = self.get('X', default)
         y = self.get('Y', default)
+        return Coordinate(x, y)
+    
+        """Move the spindle up and down the z-axis"""
+    def spindle_height(self, default = None):
         z = self.get('Z', default)
-        return Coordinate(x, y, z)
+        return z
     
         """ Checsk if line object as at least
             one coordinate"""
