@@ -19,13 +19,8 @@ class Interpreter(object):
     def __init__(self):
         """ Initialization"""
         self._home = Coordinate(0.0, 0.0, 0.0)
-        # init variables
         self._position = Coordinate(0.0, 0.0, 0.0)
-        self._velocity = 0
-        self._spindle_rpm = 0
-        self._local = None
-        self._absoluteCoordinates = 0
-        self._plane = None
+
 
         """ Performs interpretation."""    
     def perform(self, line_object):
@@ -78,7 +73,6 @@ class Interpreter(object):
                     client.move(x, y, z)                   
                 
             if command == 'G17':
-                self._plane = "XY plane"
                 print("XY plane selected")
                 
             if command == 'G21':
