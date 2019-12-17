@@ -5,8 +5,6 @@ Created on Wed Dec  4 18:35:15 2019
 @author: Henri_2
 """
 
-from __future__ import division
-
 """This class represents coordinates"""
 class Coordinate(object):
     

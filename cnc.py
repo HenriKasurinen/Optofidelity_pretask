@@ -1,3 +1,4 @@
+
 # -*- coding: utf-8 -*-
 """
 Created on Wed Dec  4 16:36:30 2019
@@ -11,7 +12,7 @@ from line_object import Line_object
 interpreter = Interpreter()
 
 def do_line(line):
-    g = Line_object.parse_line(line)
+    g = Line_object.parse_line(Line_object, line)
     interpreter.perform(g)
     return True
 

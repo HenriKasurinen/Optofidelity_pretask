@@ -50,7 +50,7 @@ class Line_object(object):
         """Gets one line of GCode, removes
             redundant characters, and saves
             all commands as letter-digit pairs"""
-    def parse_line(line):
+    def parse_line(self, line):
         line = line.upper()
         line = re.sub(clean_pattern, '', line)
         if len(line) == 0:
